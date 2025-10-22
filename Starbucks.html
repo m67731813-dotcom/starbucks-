@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starbucks Experience</title>
+    <style>
+        /* --- CSS Rules (Updated for new color scheme and aesthetics) --- */
+        :root {
+            --starbucks-dark-green: #0A6443; /* Deeper primary green */
+            --starbucks-light-green: #D4E9E2; /* Soft light accent */
+            --starbucks-cream: #F5F0E5; /* Soft, warm background */
+            --starbucks-brown: #3C2F2F; /* Rich dark brown for text/accents */
+            --starbucks-gold: #C89F5B; /* A subtle gold accent */
+            --font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; /* Slightly softer font */
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: var(--starbucks-cream); /* Creamy background */
+            color: var(--starbucks-brown);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--starbucks-dark-green); /* Deeper green header */
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Stronger shadow */
+        }
+
+        .logo {
+            font-size: 26px; /* Slightly larger logo */
+            font-weight: bold;
+            cursor: pointer;
+            color: white; /* Ensure logo text is white */
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 10px 18px; /* Slightly larger buttons */
+            margin-left: 10px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s; /* Smooth transitions */
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        
+        nav button:hover, nav button.active {
+            background-color: rgba(255, 255, 255, 0.25); /* More prominent hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
+
+        main {
+            padding: 30px; /* Increased padding */
+            max-width: 1000px;
+            margin: 30px auto; /* Increased margin */
+        }
+
+        /* --- View Containers --- */
+        .page {
+            display: none;
+            padding: 40px;
+            border-radius: 12px; /* Softer rounded corners */
+            background-color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* More pronounced shadow */
+        }
+
+        .page.active {
+            display: block;
+        }
+        
+        /* --- Login Page Styles --- */
+        #login-page { 
+            max-width: 450px; /* Slightly wider */
+            margin: 60px auto;
+            text-align: center;
+            background-color: var(--starbucks-light-green); /* Light green background */
+            padding: 50px; /* More internal padding */
+        }
+        #login-page h2 {
+            color: var(--starbucks-brown); /* Darker heading */
+            margin-bottom: 35px;
+            font-size: 2.2em;
+        }
+        .login-form input { 
+            width: 100%; padding: 14px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 1.1em; 
+        }
+        .login-form button { 
+            width: 100%; background-color: var(--starbucks-dark-green); color: white; padding: 16px; border: none; border-radius: 50px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: background-color 0.3s; 
+        }
+        .login-form button:hover { background-color: var(--starbucks-brown); }
+        #login-message { color: red; margin-top: 15px; font-weight: bold; }
+
+
+        /* --- Home Page Styles (New: quotes) --- */
+        #home-page .hero-banner {
+            background-color: var(--starbucks-dark-green);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden; /* For future background effects */
+        }
+        #home-page .hero-banner h1 {
+            font-size: 3.5em; /* Larger heading */
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Subtle text shadow */
+        }
+        #home-page .hero-banner .quote {
+            font-style: italic;
+            font-size: 1.3em;
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 2.5em; /* Prevent layout shift */
+        }
+        #home-page h2 {
+            font-size: 2.5em;
+            color: var(--starbucks-brown);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #home-page p {
+            font-size: 1.15em;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            color: #555;
+        }
+        #home-page button {
+            display: block;
+            margin: 0 auto;
+            background-color: var(--starbucks-gold); /* Gold button */
+            color: var(--starbucks-brown);
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        #home-page button:hover {
+            background-color: #d8b273; /* Slightly darker gold */
+            transform: translateY(-2px);
+        }
+
+        /* --- Menu Page Styles --- */
+        #menu-page h2 { font-size: 2.5em; color: var(--starbucks-brown); margin-bottom: 15px; }
+        #menu-page p { font-size: 1.1em; color: #666; margin-bottom: 30px; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Slightly larger cards */
+            gap: 25px; /* Increased gap */
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background-color: var(--starbucks-light-green); /* Light green cards */
+            padding: 25px; /* More padding */
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Softer shadow */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .product-card h3 { color: var(--starbucks-dark-green); font-size: 1.4em; margin-bottom: 10px; }
+        .product-card p { font-size: 1em; color: #555; min-height: 4em; display: flex; align-items: center; justify-content: center; } /* Consistent height */
+        .product-card .price { font-weight: bold; color: var(--starbucks-brown); font-size: 1.3em; margin-top: 15px; }
+
+        .product-card button {
+            background-color: var(--starbucks-brown); /* Dark brown button */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .product-card button:hover {
+            background-color: var(--starbucks-dark-green); /* Green on hover */
+        }
+        #menu-page > button { /* "Proceed to Cart" button */
+            background-color: var(--starbucks-dark-green);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            margin-top: 40px;
+            display: block; /* Center the button */
+            margin-left: auto;
+            margin-right: auto;
+            transition: background-color 0.3s;
+        }
+        #menu-page > button:hover { background-color: var(--starbucks-brown); }
+
+        /* --- Order (Cart) Page Styles --- */
+        #order-page h2 { color: var(--starbucks-brown); margin-bottom: 30px; font-size: 2.5em; }
+        
+        #cart-list {
+            list-style: none;
+            padding: 0;
+            border: 1px solid #e0e0e0; /* Softer border */
+            border-radius: 8px;
+            overflow: hidden; /* For nice border radius */
+        }
+        
+        #cart-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px; /* More padding */
+            border-bottom: 1px solid #f0f0f0; /* Lighter border */
+            background-color: #fff;
+        }
+        
+        #cart-list li:last-child { border-bottom: none; }
+        
+        .item-details span:first-child { font-weight: bold; color: var(--starbucks-dark-green); font-size: 1.1em; }
+        .item-details span:last-child { font-size: 0.95em; color: #777; margin-left: 10px; }
+
+        .cart-actions button {
+            background-color: var(--starbucks-light-green); /* Light green buttons */
+            border: 1px solid var(--starbucks-dark-green);
+            color: var(--starbucks-dark-green);
+            padding: 6px 10px;
+            margin: 0 3px; /* Smaller margin */
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .cart-actions button:hover {
+            background-color: var(--starbucks-dark-green);
+            color: white;
+        }
+        
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid var(--starbucks-dark-green); /* Stronger total border */
+        }
+        
+        .total-section div {
+            font-size: 1.8em; /* Larger total font */
+            font-weight: bold;
+            color: var(--starbucks-brown);
+        }
+
+        #checkout-btn-final {
+            background-color: var(--starbucks-dark-green);
+            color: white;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        #checkout-btn-final:hover {
+            background-color: var(--starbucks-brown);
+            transform: translateY(-2px);
+        }
+        #order-page p a {
+            color: var(--starbucks-dark-green);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        #order-page p a:hover {
+            color: var(--starbucks-gold);
+            text-decoration: underline;
+        }
+
+        /* --- Confirmation Page Styles --- */
+        #confirmation-page {
+            max-width: 650px; /* Slightly wider */
+            margin: 60px auto;
+            text-align: center;
+            background-color: var(--starbucks-light-green);
+            padding: 50px;
+        }
+
+        #confirmation-page h2 {
+            color: var(--starbucks-dark-green);
+            font-size: 3.5em; /* Larger heading */
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        #confirmation-page p {
+            font-size: 1.6em; /* Larger text */
+            margin-bottom: 30px;
+            color: var(--starbucks-brown);
+        }
+
+        #confirmation-quote {
+            font-style: italic;
+            color: var(--starbucks-dark-green);
+            font-size: 1.4em; /* Larger quote */
+            padding: 25px;
+            border: 2px dashed var(--starbucks-gold); /* Gold dashed border */
+            border-radius: 10px;
+            background-color: var(--starbucks-cream);
+            margin-bottom: 30px;
+        }
+        
+        #confirmation-page button {
+            background-color: var(--starbucks-brown);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        #confirmation-page button:hover {
+            background-color: var(--starbucks-dark-green);
+            transform: translateY(-2px);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <header id="main-header" style="display: none;">
+        <div class="logo" onclick="navigateTo('home')">Starbucks ☕</div>
+        <nav>
+            <button id="nav-home" onclick="navigateTo('home')">Home</button>
+            <button id="nav-menu" onclick="navigateTo('menu')">Menu</button>
+            <button id="nav-order" onclick="navigateTo('order')">Cart (<span id="cart-count">0</span>)</button>
+            <button id="nav-logout" onclick="logout()">Logout</button>
+        </nav>
+    </header>
+
+    <main>
+        <div id="login-page" class="page active">
+            <h2>Welcome to Starbucks Rewards</h2>
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <input type="email" id="email" placeholder="Email Address" required>
+                <input type="password" id="password" placeholder="Password (Use 'starbucks')" required>
+                <button type="submit">Log In</button>
+            </form>
+            <p id="login-message"></p>
+        </div>
+
+        <div id="home-page" class="page">
+            <div class="hero-banner">
+                <h1>Your Daily Grind, Elevated.</h1>
+                <p class="quote" id="home-quote">"Where every sip tells a story."</p>
+            </div>
+            <h2>Discover Your Perfect Blend</h2>
+            <p>From rich espresso creations to refreshing iced teas and delicious pastries, find your favorite or explore something new.</p>
+            <button onclick="navigateTo('menu')">Explore Our Menu</button>
+        </div>
+
+        <div id="menu-page" class="page">
+            <h2>Our Full Menu</h2>
+            <p>Select your favorite drinks and treats to add them to your cart.</p>
+            <div class="product-grid" id="product-list">
+                </div>
+            <button onclick="navigateTo('order')">Review Cart & Checkout</button>
+        </div>
+
+        <div id="order-page" class="page">
+            <h2>Your Current Order</h2>
+            <ul id="cart-list">
+                </ul>
+
+            <div class="total-section">
+                <div>Order Total: $<span id="total-price">0.00</span></div>
+                <button id="checkout-btn-final" onclick="checkout()">Place Order</button>
+            </div>
+            <p style="margin-top: 20px;"><a href="#" onclick="navigateTo('menu')">← Continue Shopping</a></p>
+        </div>
+        
+        <div id="confirmation-page" class="page">
+            <h2 id="confirmation-title">Order Confirmed!</h2>
+            <p>Thank you for your order! It will be ready shortly.</p>
+            <div id="confirmation-quote"></div>
+            <p style="margin-top: 40px;"><button onclick="navigateTo('home')">Back to Home</button></p>
+        </div>
+    </main>
+
+    <script>
+        // --- JavaScript Rules ---
+
+        // State and Data
+        let isAuthenticated = false;
+        const correctPassword = "starbucks";
+        const pages = ['login', 'home', 'menu', 'order', 'confirmation'];
+        let cart = []; // The shopping cart array
+
+        const homePageQuotes = [
+            "Your Daily Escape, Crafted with Care.",
+            "Where Every Sip Tells a Story.",
+            "Great Days Start with Great Coffee.",
+            "Find Your Favorite Moment, One Cup at a Time.",
+            "More Than Coffee, It's a Connection.",
+            "Taste the Inspiration in Every Drop."
+        ];
+
+        const confirmationQuotes = [
+            "May your coffee be strong and your day be productive.",
+            "The best conversations happen over coffee.",
+            "Take a deep breath and smell the coffee.",
+            "Happiness is a cup of coffee and a good book.",
+            "A yawn is a silent scream for coffee.",
+            "Coffee: Because adulting is hard."
+        ];
+        
+        const menuProducts = [
+            // Drinks
+            { id: 1, name: "Pumpkin Spice Latte", desc: "Signature espresso, pumpkin spice flavor & whipped cream.", price: 5.95 },
+            { id: 2, name: "Caramel Macchiato", desc: "Vanilla, steamed milk, espresso, and caramel drizzle.", price: 5.25 },
+            { id: 3, name: "Iced Shaken Espresso", desc: "Blonde espresso, brown sugar, oatmilk, shaken over ice.", price: 4.85 },
+            { id: 4, name: "Cold Brew", desc: "Slow-steeped, super-smooth custom blend.", price: 3.95 },
+            { id: 5, name: "White Chocolate Mocha", desc: "Espresso, white chocolate sauce, steamed milk.", price: 5.45 },
+            { id: 6, name: "Matcha Tea Latte", desc: "Matcha powder, milk, lightly sweetened.", price: 4.55 },
+            { id: 7, name: "Pink Drink", desc: "Strawberry Acai Refresher with creamy coconut milk.", price: 4.95 },
+            { id: 8, name: "Chai Tea Latte", desc: "Black tea infused with spices, steamed milk.", price: 4.65 },
+            { id: 9, name: "Caffè Americano", desc: "Espresso shots topped with hot water for a rich taste.", price: 3.25 },
+            { id: 10, name: "Mocha Cookie Crumble Frap", desc: "Mocha sauce, Frappuccino chips, coffee, cookie crumbs.", price: 6.25 },
+            { id: 11, name: "Green Tea Crème Frap", desc: "Matcha powder, milk, and ice blended to perfection.", price: 5.75 },
+            { id: 12, name: "Honey Almondmilk Cold Brew", desc: "Cold brew with honey and almondmilk for a sweet twist.", price: 4.50 },
+            { id: 13, name: "Vanilla Sweet Cream Cold Brew", desc: "Cold brew with a float of house-made vanilla sweet cream.", price: 4.45 },
+            { id: 14, name: "Pike Place Roast", desc: "Smooth, well-rounded medium roast coffee.", price: 2.45 },
+            { id: 15, name: "Espresso Shot", desc: "A pure, potent shot of Starbucks® espresso.", price: 2.15 },
+            // Food
+            { id: 16, name: "Cheese Danish", desc: "Flaky pastry with sweet cream cheese filling.", price: 3.75 },
+            { id: 17, name: "Double Smoked Bacon Sandwich", desc: "Bacon, aged cheddar, and egg on an artisan roll.", price: 5.95 },
+            { id: 18, name: "Spinach, Feta & Egg Wrap", desc: "Whole-wheat wrap with egg whites, spinach, and feta.", price: 4.75 },
+            { id: 19, name: "Lemon Loaf", desc: "Rich, dense loaf cake with zesty lemon drizzle.", price: 3.25 },
+            { id: 20, name: "Butter Croissant", desc: "Classic buttery, flaky croissant, perfect with coffee.", price: 2.95 }
+        ];
+
+        // --- Core Navigation and State Functions ---
+
+        function navigateTo(targetPage) {
+            if (!isAuthenticated && targetPage !== 'login') {
+                targetPage = 'login';
+            }
+            
+            if (targetPage === 'order' && cart.length === 0) {
+                 alert("Your cart is empty! Please add items from the Menu first.");
+                 targetPage = 'menu';
+            }
+
+            pages.forEach(page => {
+                const element = document.getElementById(page + '-page');
+                if (element) element.classList.remove('active');
+            });
+            const targetElement = document.getElementById(targetPage + '-page');
+            if (targetElement) targetElement.classList.add('active');
+
+            const header = document.getElementById('main-header');
+            header.style.display = (targetPage === 'login' && !isAuthenticated) ? 'none' : 'flex';
+
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            const activeButton = document.getElementById('nav-' + targetPage);
+            if(activeButton) activeButton.classList.add('active');
+
+            if (targetPage === 'menu') renderProducts();
+            if (targetPage === 'order') renderCart();
+            if (targetPage === 'home') displayRandomHomePageQuote(); // NEW: Display quote on home page load
+            updateCartCount();
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const passwordInput = document.getElementById('password').value;
+            const messageElement = document.getElementById('login-message');
+
+            if (passwordInput === correctPassword) {
+                isAuthenticated = true;
+                messageElement.textContent = "Login successful! Welcome.";
+                messageElement.style.color = "var(--starbucks-dark-green)";
+                setTimeout(() => { navigateTo('home'); }, 500);
+            } else {
+                messageElement.textContent = "Invalid Password. Try 'starbucks'";
+                messageElement.style.color = "red";
+            }
+        }
+
+        function logout() {
+            isAuthenticated = false;
+            cart = []; 
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('login-message').textContent = "Logged out successfully.";
+            document.getElementById('login-message').style.color = "var(--starbucks-dark-green)";
+            navigateTo('login');
+        }
+        
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
+        }
+
+        // NEW: Function to display a random quote on the home page
+        function displayRandomHomePageQuote() {
+            const quoteElement = document.getElementById('home-quote');
+            const randomQuote = homePageQuotes[Math.floor(Math.random() * homePageQuotes.length)];
+            quoteElement.textContent = `"${randomQuote}"`;
+        }
+
+        // --- Menu Functions ---
+
+        function renderProducts() {
+            const productListElement = document.getElementById('product-list');
+            productListElement.innerHTML = ''; 
+
+            menuProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <h3>${product.name}</h3>
+                        <p>${product.desc}</p>
+                    </div>
+                    <div class="price">$${product.price.toFixed(2)}</div>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                productListElement.appendChild(card);
+            });
+        }
+        
+        function addToCart(productId) {
+            const product = menuProducts.find(p => p.id === productId);
+            if (product) {
+                const existingItem = cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1
+                    });
+                }
+                updateCartCount();
+                // alert(`${product.name} added to cart!`); // Removed for smoother experience
+            }
+        }
+
+        // --- Order (Cart) Functions ---
+
+        function updateQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== productId);
+                }
+            }
+            renderCart();
+            updateCartCount();
+        }
+
+        function renderCart() {
+            const cartList = document.getElementById('cart-list');
+            const totalElement = document.getElementById('total-price');
+            cartList.innerHTML = ''; 
+            let total = 0;
+
+            if (cart.length === 0) {
+                cartList.innerHTML = '<li style="justify-content: center; font-style: italic; color: #666;">Your cart is currently empty.</li>';
+                totalElement.textContent = '0.00';
+                document.getElementById('checkout-btn-final').disabled = true;
+                return;
+            }
+            
+            document.getElementById('checkout-btn-final').disabled = false;
+
+            cart.forEach(item => {
+                const listItem = document.createElement('li');
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                listItem.innerHTML = `
+                    <div class="item-details">
+                        <span>${item.name}</span>
+                        <span>($${item.price.toFixed(2)} each)</span>
+                    </div>
+                    <div class="cart-actions">
+                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <div class="item-total" style="font-weight: bold;">$${itemTotal.toFixed(2)}</div>
+                `;
+                cartList.appendChild(listItem);
+            });
+
+            totalElement.textContent = total.toFixed(2);
+        }
+        
+        // --- Checkout and Confirmation Functions ---
+
+        function checkout() {
+            if (cart.length === 0) return; 
+
+            const finalTotal = document.getElementById('total-price').textContent;
+            
+            const randomQuote = confirmationQuotes[Math.floor(Math.random() * confirmationQuotes.length)];
+            document.getElementById('confirmation-title').textContent = `Order #${Math.floor(Math.random() * 10000) + 1000} Confirmed!`; // Start order IDs higher
+            document.getElementById('confirmation-quote').innerHTML = `"${randomQuote}"<br><br>Estimated Total: $${finalTotal}`;
+
+            cart = [];
+            updateCartCount();
+            
+            navigateTo('confirmation');
+        }
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            navigateTo('login');
+            // Initial display of quote when home page is potentially first loaded (after login)
+            displayRandomHomePageQuote(); 
+        });
+    </script>
+</body>
+</html>
